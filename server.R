@@ -10,14 +10,15 @@
 
 library(shiny)
 library(tm)
+library(NLP)
 
 #setwd("C:/Users/user/Desktop/capstone/m10_Capstone")
 
 source("./global.R")
 #load preprocess data for faster prediction application
-load('./Data/tdm2.Rdata')
-load('./Data/tdm3.Rdata')
-load('./Data/tdm1a.Rdata')
+load('./Data/tdm2.RData')
+load('./Data/tdm3.RData')
+load('./Data/tdm1a.RData')
 
 
 # Define server logic required to calculate reactive output and plot graph
@@ -48,11 +49,14 @@ shinyServer(function(input, output) {
       usertext<-strsplit(userinput,split=" ")
       usertext<-tail(usertext[[1]],n=1)
       usertext<-paste(usertext,sep="", collapse=" ")
-      greptext<-tdm2$dimnames$Terms[grep(paste("^",usertext,"[[:space:]]",sep=""),tdm2$dimnames$Terms)]
+      greptext<-tdm2$MyBigram[grep(paste("^",usertext,"[[:space:]]",sep=""),tdm2$MyBigram)]
+#      greptext<-tdm2$dimnames$Terms[grep(paste("^",usertext,"[[:space:]]",sep=""),tdm2$dimnames$Terms)]
       if (length(greptext)!=0) {
         #2gram prediction
-        sortgreptext<-sort(rowSums(as.matrix(tdm2[greptext,])), decreasing = TRUE)
+        sortgreptext<-data.frame(greptext)
         sortgreptext<-data.frame(tdm2=names(sortgreptext), frequency=sortgreptext)
+#        sortgreptext<-sort(rowSums(as.matrix(tdm2[greptext,])), decreasing = TRUE)
+#        sortgreptext<-data.frame(tdm2=names(sortgreptext), frequency=sortgreptext)
       } else {
         #1gram prediction
         #top6 word if usertext not found from N-grams
@@ -67,20 +71,26 @@ shinyServer(function(input, output) {
       usertext<-tail(usertext[[1]],n=2)
       usertext<-paste(usertext,sep="", collapse=" ")
       
-      greptext<-tdm3$dimnames$Terms[grep(paste("^",usertext,"[[:space:]]",sep=""),tdm3$dimnames$Terms)]
+      greptext<-tdm3$MyTrigram[grep(paste("^",usertext,"[[:space:]]",sep=""),tdm3$MyTrigram)]
+#      greptext<-tdm3$dimnames$Terms[grep(paste("^",usertext,"[[:space:]]",sep=""),tdm3$dimnames$Terms)]
       if (length(greptext)!=0){
         #Predict by 3-gram first
-        sortgreptext<-sort(rowSums(as.matrix(tdm3[greptext,])), decreasing = TRUE)
+        sortgreptext<-data.frame(greptext)
         sortgreptext<-data.frame(tdm3=names(sortgreptext), frequency=sortgreptext)
+#        sortgreptext<-sort(rowSums(as.matrix(tdm3[greptext,])), decreasing = TRUE)
+#        sortgreptext<-data.frame(tdm3=names(sortgreptext), frequency=sortgreptext)
       } else {
         usertext<-strsplit(userinput,split=" ")
         usertext<-tail(usertext[[1]],n=1)
         usertext<-paste(usertext,sep="", collapse=" ")
-        greptext<-tdm2$dimnames$Terms[grep(paste("^",usertext,"[[:space:]]",sep=""),tdm2$dimnames$Terms)]
+        greptext<-tdm2$MyBigram[grep(paste("^",usertext,"[[:space:]]",sep=""),tdm2$MyBigram)]
+#        greptext<-tdm2$dimnames$Terms[grep(paste("^",usertext,"[[:space:]]",sep=""),tdm2$dimnames$Terms)]
         if (length(greptext)!=0) {
           #Predict by 2-gram next
-          sortgreptext<-sort(rowSums(as.matrix(tdm2[greptext,])), decreasing = TRUE)
+          sortgreptext<-data.frame(greptext)
           sortgreptext<-data.frame(tdm2=names(sortgreptext), frequency=sortgreptext)
+#          sortgreptext<-sort(rowSums(as.matrix(tdm2[greptext,])), decreasing = TRUE)
+#          sortgreptext<-data.frame(tdm2=names(sortgreptext), frequency=sortgreptext)
         } else {
           #Predict by 1-gram last 
           tdm1a_5 <- tdm1a[1:6,]
@@ -94,8 +104,10 @@ shinyServer(function(input, output) {
     if (input$Predict == 0)
       return()
     a<-PredictedText2()
-    lastword<-as.character(a[1,1])
-    lastword<-tail(strsplit(lastword, split=" ")[[1]],1) 
+#    lastword<-as.character(a[1,1])
+#    lastword<-tail(strsplit(lastword, split=" ")[[1]],1) 
+    lastword<-as.character(a[1,2])
+    lastword<-tail(strsplit(lastword, split=" ")[[1]],1)
   })
 
 #Other possible text(s)/word(s)   
@@ -103,15 +115,22 @@ shinyServer(function(input, output) {
     if (input$Predict == 0)
       return()
     ab<-PredictedText2()
-    ab<-as.character(ab[,1])
+    ab<-as.character(ab[,2])
     ab<-strsplit(ab, split=" ")
     ab<-data.frame(ab)
     ab<-t(ab)
-    ab<-data.frame(ab[-1,ncol(ab)])
+    ab<-data.frame(ab[-3,ncol(ab)])
     names(ab)<-"other possibilities"
     rownames(ab)<-NULL
     head(ab,5)
-    
+#    ab<-as.character(ab[,1])
+#    ab<-strsplit(ab, split=" ")
+#    ab<-data.frame(ab)
+#    ab<-t(ab)
+#    ab<-data.frame(ab[-1,ncol(ab)])
+#    names(ab)<-"other possibilities"
+#    rownames(ab)<-NULL
+#    head(ab,5)
   })
   
 })

@@ -3,8 +3,7 @@
 library(shiny)
 library(tm)
 library(NLP)
-library(tm)
 
-load('./Data/tdm2.Rdata')
-load('./Data/tdm3.Rdata')
-load('./Data/tdm1a.Rdata')
+load('./Data/tdm2.RData')
+load('./Data/tdm3.RData')
+load('./Data/tdm1a.RData')
