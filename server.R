@@ -11,12 +11,13 @@
 library(shiny)
 library(tm)
 
-#setwd("C:/Users/user/Desktop/capstone")
+#setwd("C:/Users/user/Desktop/capstone/m10_Capstone")
 
+source("./global.R")
 #load preprocess data for faster prediction application
-load("./Data/tdm2.Rdata")
-load("./Data/tdm3.Rdata")
-load("./Data/tdm1a.Rdata")
+load('./Data/tdm2.Rdata')
+load('./Data/tdm3.Rdata')
+load('./Data/tdm1a.Rdata')
 
 
 # Define server logic required to calculate reactive output and plot graph
