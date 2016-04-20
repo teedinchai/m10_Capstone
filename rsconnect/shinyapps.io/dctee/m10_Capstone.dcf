@@ -2,8 +2,8 @@ name: m10_Capstone
 account: dctee
 server: shinyapps.io
 appId: 96075
-bundleId: 425973
+bundleId: 426089
 url: https://dctee.shinyapps.io/m10_Capstone/
-when: 1461140110.51287
+when: 1461146440.23991
 asMultiple: FALSE
 asStatic: FALSE

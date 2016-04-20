@@ -31,8 +31,6 @@ The main consideration in my shinny application is the speed of next-word displa
 </small>
 
 <small>
-The "Next Word Prediction" shiny application is available at:  
-<https://dctee.shinyapps.io/project>  
 Source code for ui.R and server.R files for the application are available at: 
 <https://github.com/teedinchai/m10_Capstone>  
 </small>
